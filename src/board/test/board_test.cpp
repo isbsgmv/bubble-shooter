@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "board.hpp"
 
-TEST(BoardTest, ConstructorInitializesCorrectly) {
+TEST(BoardTest, Constructor) {
     Board board(8, 8, 4);
     EXPECT_EQ(board.rows(), 8u);
     EXPECT_EQ(board.cols(), 8u);
