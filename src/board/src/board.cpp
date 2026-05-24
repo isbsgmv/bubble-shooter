@@ -1,4 +1,3 @@
-
 #include "board.hpp"
 #include "utils/random.hpp"
 
@@ -85,16 +84,21 @@ void Board::set(std::size_t row, std::size_t col, BubbleColor color)
 
 std::vector<std::pair<int, int>> Board::hexNeighbors(int row, int col) const
 {
+    // Define the relative offsets for neighbors in even and odd rows.
+    // Hexagonal grids have different neighbor layouts depending on row parity.
     static constexpr std::pair<int, int> kEvenRowOffsets[] = {
         {-1, -1}, {-1, 0}, {0, -1}, {0, 1}, {1, -1}, {1, 0}};
 
     static constexpr std::pair<int, int> kOddRowOffsets[] = {
         {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, 0}, {1, 1}};
 
+    // Select the appropriate offset pattern based on whether the row is even or odd.
     const auto &offsets = ((row % 2) == 0) ? kEvenRowOffsets : kOddRowOffsets;
 
     std::vector<std::pair<int, int>> result;
-    result.reserve(6);
+    result.reserve(6); // Hexagonal grids always have up to 6 neighbors.
+
+    // Compute the absolute coordinates of each neighbor and check if it's in bounds.
     for (const auto &[dRow, dCol] : offsets)
     {
         const int nextRow = row + dRow;
@@ -193,3 +197,8 @@ char Board::colorToChar(BubbleColor color)
         return '.';
     }
 }
+
+// The relative offsets for neighbors are derived based on the staggered layout of hexagonal grids.
+// In even rows, the top-left and bottom-left neighbors shift one column left.
+// In odd rows, the top-right and bottom-right neighbors shift one column right.
+// This ensures that each cell has up to 6 neighbors, and the layout alternates by row parity.
