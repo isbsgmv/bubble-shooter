@@ -3,8 +3,9 @@
 #include "board.hpp"
 
 TEST(ProjectileTest, ShootInvalidAngle) {
-    Board board(8, 8, 4);
-    auto result = Projectile::shoot(board, 0.0, BubbleColor::Red);
+    Bubble::ColorManager colorManager;
+    Board board(8, 8, colorManager);
+    auto result = Projectile::shoot(board, 0.0, Bubble::Color::Red);
     EXPECT_FALSE(result.has_value());
 }
 

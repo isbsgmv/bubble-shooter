@@ -1,21 +1,11 @@
 
 #pragma once
 #include <cstddef>
-#include <cstdint>
 #include <iosfwd>
-#include <random>
 #include <utility>
 #include <vector>
 
-enum BubbleColor : std::uint8_t
-{
-    None,
-    Red,
-    Green,
-    Blue,
-    Yellow,
-    Purple
-};
+#include "bubble/include/bubble_color.hpp"
 
 class Board
 {
@@ -24,9 +14,9 @@ public:
      * @brief Constructs a new Board with given dimensions and color count.
      * @param rows Number of rows.
      * @param cols Number of columns.
-     * @param nColors Number of bubble colors.
+     * @param colorManager Reference to a ColorManager for tracking color counts.
      */
-    Board(std::size_t rows, std::size_t cols, std::size_t nColors);
+    Board(std::size_t rows, std::size_t cols, Bubble::ColorManager &colorManager);
 
     /**
      * @brief Prints the board to the given output stream.
@@ -68,7 +58,7 @@ public:
      * @param col Column index.
      * @return Bubble color.
      */
-    BubbleColor get(std::size_t row, std::size_t col) const;
+    Bubble::Color get(std::size_t row, std::size_t col) const;
 
     /**
      * @brief Sets the color of the bubble at the given cell.
@@ -76,8 +66,7 @@ public:
      * @param col Column index.
      * @param color Bubble color to set.
      */
-    void set(std::size_t row, std::size_t col, BubbleColor color);
-
+    void set(std::size_t row, std::size_t col, Bubble::Color color);
     /**
      * @brief Returns the hexagonal neighbors of a cell.
      * @param row Row index.
@@ -102,9 +91,10 @@ private:
      */
     int clearDetachedBubbles();
     std::size_t index(std::size_t row, std::size_t col) const;
-    static char colorToChar(BubbleColor color);
+    static char colorToChar(Bubble::Color color);
 
     std::size_t m_rows;
     std::size_t m_cols;
-    std::vector<BubbleColor> m_board;
+    std::vector<Bubble::Color> m_board;
+    Bubble::ColorManager &m_colorManager;
 };

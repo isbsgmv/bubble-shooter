@@ -1,0 +1,3 @@
+add_executable(bubble_color_test bubble_color_test.cpp)
+target_link_libraries(bubble_color_test PRIVATE utils gtest gtest_main)
+add_test(NAME bubble_color_test COMMAND bubble_color_test)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "board.hpp"
+#include "bubble/include/bubble_color.hpp"
 
 #include <cstddef>
 #include <optional>
@@ -19,7 +20,7 @@ public:
     static std::optional<std::pair<std::size_t, std::size_t>> attachAtCeiling(
         Board &board,
         double x,
-        BubbleColor color);
+        Bubble::Color color);
 
     /**
      * @brief Finds the bubble hit by a projectile at (x, y).
@@ -46,5 +47,5 @@ public:
         int hitCol,
         double x,
         double y,
-        BubbleColor color);
+        Bubble::Color color);
 };

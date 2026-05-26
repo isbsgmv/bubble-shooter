@@ -3,7 +3,7 @@ add_library(board
     include/board.hpp
 )
 
-target_include_directories(board PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(board PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/utils/)
 
 target_link_libraries(board PUBLIC utils)
 

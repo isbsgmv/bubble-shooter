@@ -16,7 +16,7 @@ add_executable(game
 target_include_directories(game PRIVATE src)
 target_compile_features(game PRIVATE cxx_std_17)
 
-target_link_libraries(game PRIVATE projectile board)
+target_link_libraries(game PRIVATE projectile board utils)
 
 if(MSVC)
     target_compile_options(game PRIVATE /W4 /permissive-)

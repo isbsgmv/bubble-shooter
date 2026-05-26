@@ -11,7 +11,7 @@ constexpr int kMaxSteps = 12000;
 std::optional<std::pair<std::size_t, std::size_t>> Projectile::shoot(
     Board &board,
     double angleDegrees,
-    BubbleColor color)
+    Bubble::Color color)
 {
            
     auto state = ProjectileTrajectory::start(board, angleDegrees);

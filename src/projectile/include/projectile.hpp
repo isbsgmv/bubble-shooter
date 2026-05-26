@@ -1,6 +1,7 @@
 #pragma once
 
 #include "board.hpp"
+#include "bubble/include/bubble_color.hpp"
 
 #include <cstddef>
 #include <optional>
@@ -19,5 +20,5 @@ public:
     static std::optional<std::pair<std::size_t, std::size_t>> shoot(
         Board &board,
         double angleDegrees,
-        BubbleColor color);
+        Bubble::Color color);
 };

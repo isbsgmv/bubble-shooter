@@ -1,14 +1,14 @@
 #include "board.hpp"
-#include "utils/random.hpp"
 
 #include <algorithm>
 #include <deque>
 #include <ostream>
 #include <stdexcept>
 
-Board::Board(std::size_t rows, std::size_t cols, std::size_t nColors) : m_rows(rows),
-                                                                        m_cols(cols),
-                                                                        m_board(rows * cols, BubbleColor::None)
+Board::Board(std::size_t rows, std::size_t cols, Bubble::ColorManager &colorManager) : m_rows(rows),
+                                                                                      m_cols(cols),
+                                                                                      m_board(rows * cols, Bubble::Color::None),
+                                                                                      m_colorManager(colorManager)
 {
     // Only the top rows so projectiles have room to travel.
     const std::size_t init_filled_rows = std::min<std::size_t>(3, m_rows);
@@ -17,7 +17,7 @@ Board::Board(std::size_t rows, std::size_t cols, std::size_t nColors) : m_rows(r
     {
         for (std::size_t col = 0; col < m_cols; ++col)
         {
-            m_board[index(row, col)] = static_cast<BubbleColor>(randomColor(nColors));
+            m_board[index(row, col)] = m_colorManager.randomColor();
         }
     }
 }
@@ -69,15 +69,15 @@ bool Board::isEmpty(int row, int col) const noexcept
         return false;
     }
 
-    return m_board[index(static_cast<std::size_t>(row), static_cast<std::size_t>(col))] == BubbleColor::None;
+    return m_board[index(static_cast<std::size_t>(row), static_cast<std::size_t>(col))] == Bubble::Color::None;
 }
 
-BubbleColor Board::get(std::size_t row, std::size_t col) const
+Bubble::Color Board::get(std::size_t row, std::size_t col) const
 {
     return m_board[index(row, col)];
 }
 
-void Board::set(std::size_t row, std::size_t col, BubbleColor color)
+void Board::set(std::size_t row, std::size_t col, Bubble::Color color)
 {
     m_board[index(row, col)] = color;
 }
@@ -115,9 +115,9 @@ std::vector<std::pair<int, int>> Board::hexNeighbors(int row, int col) const
 
 int Board::clearConnectedGroup(std::size_t startRow, std::size_t startCol, std::size_t minGroupSize)
 {
-    const BubbleColor target = get(startRow, startCol);
+    const Bubble::Color target = get(startRow, startCol);
     // Nothing to clear when the selected cell is already empty.
-    if (target == BubbleColor::None)
+    if (target == Bubble::Color::None)
     {
         return 0;
     }
@@ -166,7 +166,7 @@ int Board::clearConnectedGroup(std::size_t startRow, std::size_t startCol, std::
     // Remove the matched component, then let unsupported bubbles fall.
     for (const std::size_t cellIndex : group)
     {
-        m_board[cellIndex] = BubbleColor::None;
+        m_colorManager.removeColor(m_board[cellIndex]);
     }
 
     clearDetachedBubbles();
@@ -184,7 +184,7 @@ int Board::clearDetachedBubbles()
     for (std::size_t col = 0; col < m_cols; ++col)
     {
         const std::size_t topIndex = index(0, col);
-        if (m_board[topIndex] == BubbleColor::None)
+        if (m_board[topIndex] == Bubble::Color::None)
         {
             continue;
         }
@@ -202,7 +202,7 @@ int Board::clearDetachedBubbles()
         for (const auto &[nRow, nCol] : hexNeighbors(row, col))
         {
             const std::size_t neighborIndex = index(static_cast<std::size_t>(nRow), static_cast<std::size_t>(nCol));
-            if (connectedToTop[neighborIndex] || m_board[neighborIndex] == BubbleColor::None)
+            if (connectedToTop[neighborIndex] || m_board[neighborIndex] == Bubble::Color::None)
             {
                 continue;
             }
@@ -219,9 +219,9 @@ int Board::clearDetachedBubbles()
         for (std::size_t col = 0; col < m_cols; ++col)
         {
             const std::size_t cellIndex = index(row, col);
-            if (m_board[cellIndex] != BubbleColor::None && !connectedToTop[cellIndex])
+            if (m_board[cellIndex] != Bubble::Color::None && !connectedToTop[cellIndex])
             {
-                m_board[cellIndex] = BubbleColor::None;
+                m_colorManager.removeColor(m_board[cellIndex]);
                 ++removed;
             }
         }
@@ -240,21 +240,21 @@ std::size_t Board::index(std::size_t row, std::size_t col) const
     return row * m_cols + col;
 }
 
-char Board::colorToChar(BubbleColor color)
+char Board::colorToChar(Bubble::Color color)
 {
     switch (color)
     {
-    case BubbleColor::Red:
+    case Bubble::Color::Red:
         return 'A';
-    case BubbleColor::Green:
+    case Bubble::Color::Green:
         return 'B';
-    case BubbleColor::Blue:
+    case Bubble::Color::Blue:
         return 'C';
-    case BubbleColor::Yellow:
+    case Bubble::Color::Yellow:
         return 'D';
-    case BubbleColor::Purple:
+    case Bubble::Color::Purple:
         return 'E';
-    case BubbleColor::None:
+    case Bubble::Color::None:
     default:
         return '.';
     }

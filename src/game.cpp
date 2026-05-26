@@ -1,7 +1,6 @@
 #include "game.h"
 
 #include "projectile.hpp"
-#include "utils/random.hpp"
 
 #include <iostream>
 #include <string>
@@ -11,7 +10,7 @@ namespace
     constexpr std::size_t kMinGroupSize = 3;
 } // namespace
 
-Game::Game() : m_board(kRows, kCols, kNColors)
+Game::Game() : m_board(kRows, kCols, m_colorManager)
 {
 }
 
@@ -50,7 +49,7 @@ void Game::loop()
                 continue;
             }
             
-            const BubbleColor projectileColor = static_cast<BubbleColor>(randomColor(kNColors));
+            const Bubble::Color projectileColor = m_colorManager.getColor();
      
             const auto attached = Projectile::shoot(m_board, angle, projectileColor);
 

@@ -8,7 +8,7 @@
 std::optional<std::pair<std::size_t, std::size_t>> ProjectileCollision::attachAtCeiling(
     Board &board,
     double x,
-    BubbleColor color)
+    Bubble::Color color)
 {
     std::optional<std::size_t> bestCol;
     double bestDistance = std::numeric_limits<double>::max();
@@ -47,7 +47,7 @@ std::optional<std::pair<int, int>> ProjectileCollision::findHitBubble(const Boar
     {
         for (std::size_t col = 0; col < board.cols(); ++col)
         {
-            if (board.get(row, col) == BubbleColor::None)
+            if (board.get(row, col) == Bubble::Color::None)
             {
                 continue;
             }
@@ -84,7 +84,7 @@ std::optional<std::pair<std::size_t, std::size_t>> ProjectileCollision::attachNe
     int hitCol,
     double x,
     double y,
-    BubbleColor color)
+    Bubble::Color color)
 {
     auto neighbors = board.hexNeighbors(hitRow, hitCol);
     std::optional<std::pair<std::size_t, std::size_t>> bestCell;

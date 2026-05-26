@@ -2,18 +2,13 @@
 #define GAME_H
 
 #include "board.hpp"
+#include "bubble/include/bubble_color.hpp"
 
-// #include <cstddef>
-// #include <iosfwd>
-// #include <optional>
-// #include <utility>
-// #include <random>
 
 class Game {
 public:
     static constexpr std::size_t kRows = 8;
     static constexpr std::size_t kCols = 8;
-    static constexpr std::size_t kNColors= 4;
 
     Game();
 
@@ -22,6 +17,7 @@ public:
 
 private:
     Board m_board;
+    Bubble::ColorManager m_colorManager;
 };
 
 #endif

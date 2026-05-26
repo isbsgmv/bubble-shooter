@@ -1,20 +1,23 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <iostream>
 #include <stdexcept>
 
 #include "board.hpp"
 
 TEST(BoardTest, Constructor) {
     // Verifies basic board dimensions are stored correctly.
-    Board board(8, 8, 4);
+    Bubble::ColorManager colorManager;
+    Board board(8, 8, colorManager);
     EXPECT_EQ(board.rows(), 8u);
     EXPECT_EQ(board.cols(), 8u);
 }
 
 TEST(BoardTest, InBoundsWorks) {
     // Confirms coordinate bounds checking accepts valid cells and rejects invalid ones.
-    Board board(8, 8, 4);
+    Bubble::ColorManager colorManager;
+    Board board(8, 8, colorManager);
     EXPECT_TRUE(board.inBounds(0, 0));
     EXPECT_TRUE(board.inBounds(7, 7));
     EXPECT_FALSE(board.inBounds(-1, 0));
@@ -23,20 +26,22 @@ TEST(BoardTest, InBoundsWorks) {
 
 TEST(BoardTest, SetAndGetWorks) {
     // Ensures writing then reading a cell returns the same color.
-    Board board(8, 8, 4);
-    board.set(2, 3, BubbleColor::Red);
-    EXPECT_EQ(board.get(2, 3), BubbleColor::Red);
+    Bubble::ColorManager colorManager;
+    Board board(8, 8, colorManager);
+    board.set(2, 3, Bubble::Color::Red);
+    EXPECT_EQ(board.get(2, 3), Bubble::Color::Red);
 }
 
 TEST(BoardTest, IsEmpty)
 {
     // Checks empty-cell semantics and that out-of-bounds queries are never treated as empty.
-    Board board(8, 8, 4);
+    Bubble::ColorManager colorManager;
+    Board board(8, 8, colorManager);
 
     // Rows below the initialized top rows start empty.
     EXPECT_TRUE(board.isEmpty(7, 0));
 
-    board.set(7, 0, BubbleColor::Blue);
+    board.set(7, 0, Bubble::Color::Blue);
     EXPECT_FALSE(board.isEmpty(7, 0));
 
     EXPECT_FALSE(board.isEmpty(-1, 0));
@@ -47,7 +52,8 @@ TEST(BoardTest, IsEmpty)
 TEST(BoardTest, HexNeighborsForEvenRowCenter)
 {
     // Validates even-row hex neighbor topology (offset pattern differs by row parity).
-    Board board(8, 8, 4);
+    Bubble::ColorManager colorManager;
+    Board board(8, 8, colorManager);
     board.print(std::cout);
     const auto neighbors = board.hexNeighbors(4, 4); // even row
 
@@ -63,7 +69,8 @@ TEST(BoardTest, HexNeighborsForEvenRowCenter)
 TEST(BoardTest, HexNeighborsForOddRowCenter)
 {
     // Validates odd-row hex neighbor topology.
-    Board board(8, 8, 4);
+    Bubble::ColorManager colorManager;
+    Board board(8, 8, colorManager);
     const auto neighbors = board.hexNeighbors(5, 4); // odd row
 
     EXPECT_EQ(neighbors.size(), 6u);
@@ -78,7 +85,8 @@ TEST(BoardTest, HexNeighborsForOddRowCenter)
 TEST(BoardTest, HexNeighborsAtTopLeftCorner)
 {
     // Corner cells should only return in-bounds neighbors.
-    Board board(8, 8, 4);
+    Bubble::ColorManager colorManager;
+    Board board(8, 8, colorManager);
     const auto neighbors = board.hexNeighbors(0, 0);
 
     EXPECT_EQ(neighbors.size(), 2u);
@@ -89,30 +97,33 @@ TEST(BoardTest, HexNeighborsAtTopLeftCorner)
 TEST(BoardTest, ClearConnectedGroupEmptyCell)
 {
     // Clearing should be a no-op when starting on an empty cell.
-    Board board(8, 8, 4);
+    Bubble::ColorManager colorManager;
+    Board board(8, 8, colorManager);
     EXPECT_EQ(board.clearConnectedGroup(7, 7, 3), 0);
 }
 
 TEST(BoardTest, ClearConnectedGroupRespectsMinimumSize)
 {
     // A connected component smaller than threshold must remain unchanged.
-    Board board(8, 8, 4);
-    board.set(7, 0, BubbleColor::Green);
-    board.set(7, 1, BubbleColor::Green);
+    Bubble::ColorManager colorManager;
+    Board board(8, 8, colorManager);
+    board.set(7, 0, Bubble::Color::Green);
+    board.set(7, 1, Bubble::Color::Green);
     board.print(std::cout);
 
     EXPECT_EQ(board.clearConnectedGroup(7, 0, 3), 0);
-    EXPECT_EQ(board.get(7, 0), BubbleColor::Green);
-    EXPECT_EQ(board.get(7, 1), BubbleColor::Green);
+    EXPECT_EQ(board.get(7, 0), Bubble::Color::Green);
+    EXPECT_EQ(board.get(7, 1), Bubble::Color::Green);
 }
 
 TEST(BoardTest, ClearConnectedGroupClearsWhenMinimumReached)
 {
     // A connected component meeting threshold should be removed and counted.
-    Board board(8, 8, 4);
-    board.set(6, 3, BubbleColor::Yellow);
-    board.set(6, 4, BubbleColor::Yellow);
-    board.set(7, 3, BubbleColor::Yellow);
+    Bubble::ColorManager colorManager;
+    Board board(8, 8, colorManager);
+    board.set(6, 3, Bubble::Color::Yellow);
+    board.set(6, 4, Bubble::Color::Yellow);
+    board.set(7, 3, Bubble::Color::Yellow);
     board.print(std::cout);
 
     EXPECT_EQ(board.clearConnectedGroup(6, 3, 3), 3);
@@ -124,12 +135,13 @@ TEST(BoardTest, ClearConnectedGroupClearsWhenMinimumReached)
 TEST(BoardTest, ClearConnectedGroupDetachedBubble)
 {
     // Removing a matching group can detach lower bubbles that should then drop.
-    Board board(8, 8, 4);
-    board.set(3, 3, BubbleColor::Yellow);
-    board.set(3, 4, BubbleColor::Yellow);
-    board.set(3, 5, BubbleColor::Yellow);
-    board.set(4, 4, BubbleColor::Green);
-    board.set(5, 4, BubbleColor::Blue);
+    Bubble::ColorManager colorManager;
+    Board board(8, 8, colorManager);
+    board.set(3, 3, Bubble::Color::Yellow);
+    board.set(3, 4, Bubble::Color::Yellow);
+    board.set(3, 5, Bubble::Color::Yellow);
+    board.set(4, 4, Bubble::Color::Green);
+    board.set(5, 4, Bubble::Color::Blue);
     board.print(std::cout);
 
     EXPECT_EQ(board.clearConnectedGroup(3, 3, 3), 3);
@@ -145,10 +157,11 @@ TEST(BoardTest, ClearConnectedGroupDetachedBubble)
 TEST(BoardTest, OutOfRangeIndices)
 {
     // Public accessors should enforce index safety through exceptions.
-    Board board(8, 8, 4);
+    Bubble::ColorManager colorManager;
+    Board board(8, 8, colorManager);
 
     EXPECT_THROW(board.get(8, 0), std::out_of_range);
     EXPECT_THROW(board.get(0, 8), std::out_of_range);
-    EXPECT_THROW(board.set(8, 0, BubbleColor::Red), std::out_of_range);
-    EXPECT_THROW(board.set(0, 8, BubbleColor::Red), std::out_of_range);
+    EXPECT_THROW(board.set(8, 0, Bubble::Color::Red), std::out_of_range);
+    EXPECT_THROW(board.set(0, 8, Bubble::Color::Red), std::out_of_range);
 }

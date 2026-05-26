@@ -12,18 +12,25 @@ The current version is an early command-line prototype that generates and prints
 
 ## What Is Implemented
 
-- `8x8` board generation
-- Random bubble colors at startup
-- Board rendering in the terminal with row/column headers
+
+The following features are currently implemented:
+
+- **Board generation and printing:** The game generates a random board and prints it to the terminal.
+- **Player input loop:** The player can enter an angle (20-160) or type 'exit' to quit.
+- **Projectile shooting:** Projectiles are launched at the chosen angle and attempt to attach to the board, with basic collision and ceiling logic.
+- **Color management:** The `ColorManager` tracks available bubble colors and their counts.
+- **Basic group clearing:** The board supports clearing connected groups of bubbles (minimum group size logic present).
 
 Current color mapping:
 
-- `A` = Red
-- `B` = Green
-- `C` = Blue
-- `D` = Yellow
-- `E` = Purple
-- `.` = Empty/None
+Current color mapping:
+
+- Red
+- Green
+- Blue
+- Yellow
+- Purple
+- Empty/None
 
 ## Project Structure
 
