@@ -10,7 +10,7 @@ add_library(projectile
 
 target_include_directories(projectile PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/utils/)
 
-target_link_libraries(projectile PUBLIC board)
+target_link_libraries(projectile PUBLIC board renderer)
 
 if(COMPILE_TESTS)
     add_subdirectory(test)

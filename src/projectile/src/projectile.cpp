@@ -1,7 +1,9 @@
 #include "projectile.hpp"
 
 #include "collision.hpp"
-#include "trajectory.hpp"
+#include <iostream>
+#include <thread>
+#include <chrono>
 
 namespace
 {
@@ -11,10 +13,12 @@ constexpr int kMaxSteps = 12000;
 std::optional<std::pair<std::size_t, std::size_t>> Projectile::shoot(
     Board &board,
     double angleDegrees,
-    Bubble::Color color)
+    Bubble::Color color,
+    SDL2Renderer *renderer )
 {
            
     auto state = ProjectileTrajectory::start(board, angleDegrees);
+    std::cout << "Initial projectile state: " << (state.has_value() ? "valid" : "invalid") << "\n";
     if (!state.has_value())
     {
         return std::nullopt;
@@ -26,6 +30,12 @@ std::optional<std::pair<std::size_t, std::size_t>> Projectile::shoot(
         {
             return std::nullopt;
         }
+        
+        RenderStats stats{
+            state->x, state->y,
+            color};
+        renderer->render(board, stats);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Adjust for smoother animation
 
         if (state->y <= 0.0)
         {

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <deque>
 #include <ostream>
+#include <iostream>
 #include <stdexcept>
 
 Board::Board(std::size_t rows, std::size_t cols, Bubble::ColorManager &colorManager) : m_rows(rows),
@@ -33,7 +34,7 @@ void Board::print(std::ostream &out) const
 
     for (std::size_t row = 0; row < m_rows; ++row)
     {
-        if ((row % 2) != 0)
+        if (((row+m_parity_offset) % 2) != 0)
         {
             out << ' ';
         }
@@ -101,7 +102,7 @@ std::vector<std::pair<int, int>> Board::hexNeighbors(int row, int col) const
         {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, 0}, {1, 1}};
 
     // Select the appropriate offset pattern based on whether the row is even or odd.
-    const auto &offsets = ((row % 2) == 0) ? kEvenRowOffsets : kOddRowOffsets;
+    const auto &offsets = (((row+m_parity_offset) % 2) == 0) ? kEvenRowOffsets : kOddRowOffsets;
 
     std::vector<std::pair<int, int>> result;
     result.reserve(6); // Hexagonal grids always have up to 6 neighbors.
@@ -255,7 +256,6 @@ char Board::colorToChar(Bubble::Color color)
 
 void Board::addNewRow(Bubble::ColorManager &colorManager)
 {
-
     // Create new row
     std::vector<Bubble::Color> newRow(m_cols);
     for (std::size_t col = 0; col < m_cols; ++col)
@@ -263,4 +263,10 @@ void Board::addNewRow(Bubble::ColorManager &colorManager)
         newRow[col] = colorManager.randomColor();
     }
     m_board.push_front(newRow);
+    m_parity_offset = !m_parity_offset;
+}
+
+bool Board::getParityOffset() const
+{
+   return m_parity_offset;
 }

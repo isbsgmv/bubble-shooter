@@ -4,6 +4,7 @@
 #include "board.hpp"
 #include "bubble/include/bubble_color.hpp"
 
+class SDL2Renderer;  // Forward declaration
 
 class Game {
 public:
@@ -14,7 +15,7 @@ public:
     Game();
 
     void printBoard(std::ostream& out) const;
-    void loop();
+    void loop(SDL2Renderer* renderer = nullptr);
 
 private:
     bool isGameOver() const;

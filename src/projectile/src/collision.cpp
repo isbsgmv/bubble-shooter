@@ -42,7 +42,7 @@ std::optional<std::pair<int, int>> ProjectileCollision::findHitBubble(const Boar
     int hitRow = -1;
     int hitCol = -1;
     double hitDistance = std::numeric_limits<double>::max();
-
+    bool parityOffset = board.getParityOffset();
     for (std::size_t row = 0; row < board.rows(); ++row)
     {
         for (std::size_t col = 0; col < board.cols(); ++col)
@@ -52,7 +52,7 @@ std::optional<std::pair<int, int>> ProjectileCollision::findHitBubble(const Boar
                 continue;
             }
 
-            const double dx = x - ProjectileGeometry::cellCenterX(row, col);
+            const double dx = x - ProjectileGeometry::cellCenterX(row + parityOffset, col);
             const double dy = y - ProjectileGeometry::cellCenterY(row);
             const double distanceSquared = dx * dx + dy * dy;
 
@@ -89,7 +89,7 @@ std::optional<std::pair<std::size_t, std::size_t>> ProjectileCollision::attachNe
     auto neighbors = board.hexNeighbors(hitRow, hitCol);
     std::optional<std::pair<std::size_t, std::size_t>> bestCell;
     double bestCellDistance = std::numeric_limits<double>::max();
-
+    bool parityOffset = board.getParityOffset();
     for (const auto &[nRow, nCol] : neighbors)
     {
         if (!board.isEmpty(nRow, nCol))
@@ -97,7 +97,7 @@ std::optional<std::pair<std::size_t, std::size_t>> ProjectileCollision::attachNe
             continue;
         }
 
-        const double dx = x - ProjectileGeometry::cellCenterX(static_cast<std::size_t>(nRow), static_cast<std::size_t>(nCol));
+        const double dx = x - ProjectileGeometry::cellCenterX(static_cast<std::size_t>(nRow) + parityOffset, static_cast<std::size_t>(nCol));
         const double dy = y - ProjectileGeometry::cellCenterY(static_cast<std::size_t>(nRow));
         const double distanceSquared = dx * dx + dy * dy;
 
