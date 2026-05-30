@@ -2,7 +2,7 @@
 
 #include "board.hpp"
 #include "bubble/include/bubble_color.hpp"
-#include "include/defaults.hpp"
+#include "include/game_settings.hpp"
 class SDL2Renderer;  // Forward declaration
 
 class Game {

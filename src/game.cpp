@@ -52,7 +52,6 @@ void Game::loop(SDL2Renderer *renderer)
 {
     std::string input;
 
-    renderer->colsRows(m_board.rows(), m_board.cols());
     double launcherX = (static_cast<double>(m_board.cols()) - 1.0) / 2.0;
     double launcherY = static_cast<double>(m_board.rows()) - 1.0;
     Bubble::Color projectileColor = m_colorManager.getColor();

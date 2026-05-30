@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
-#include "defaults.hpp"
+#include "game_settings.hpp"
 
 SDL2Renderer::SDL2Renderer() = default;
 
@@ -13,7 +13,6 @@ SDL2Renderer::~SDL2Renderer()
 
 bool SDL2Renderer::init(int windowWidth, int windowHeight, const char *title)
 {
-    m_hexSize = std::min(windowWidth / (GameSettings::Cols * 1.5), windowHeight / (GameSettings::Rows * 1.5));
     m_windowWidth = windowWidth;
     m_windowHeight = windowHeight;
 
@@ -56,19 +55,18 @@ bool SDL2Renderer::init(int windowWidth, int windowHeight, const char *title)
                            BACKGROUND_COLOR.b, BACKGROUND_COLOR.a);
     SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
 
-    calculateGridLayout();
+    
     m_isRunning = true;
 
     return true;
 }
 
-void SDL2Renderer::colsRows(size_t rows, size_t cols)
-{
-    m_rows = rows;
-    m_cols = cols;
+void SDL2Renderer::initGameSettings() {
 
-    double launcher_grid_x = (static_cast<double>(cols) - 1.0) / 2.0,
-           launcher_grid_y = static_cast<double>(rows) - 1.0;
+    m_hexSize = std::min(m_windowWidth / (GameSettings::Cols * 1.5), m_windowHeight / (GameSettings::Rows * 1.5));
+    calculateGridLayout();
+    double launcher_grid_x = (static_cast<double>(GameSettings::Cols) - 1.0) / 2.0,
+           launcher_grid_y = static_cast<double>(GameSettings::Rows) - 1.0;
     hexGridToScreenCoord(launcher_grid_y, launcher_grid_x, m_launcherX, m_launcherY);
 }
 
@@ -245,9 +243,9 @@ void SDL2Renderer::render(const Board &board, const RenderStats &stats)
 
     // Draw game board
     bool parityOffset = board.getParityOffset();
-    for (std::size_t row = 0; row < m_rows; ++row)
+    for (std::size_t row = 0; row < GameSettings::Rows; ++row)
     {
-        for (std::size_t col = 0; col < m_cols; ++col)
+        for (std::size_t col = 0; col < GameSettings::Cols; ++col)
         {
             int screenX, screenY;
             hexGridToScreenCoord(row + parityOffset, col, screenX, screenY);
@@ -267,7 +265,7 @@ void SDL2Renderer::render(const Board &board, const RenderStats &stats)
 
     //Draw next color preview
     SDL_Color next_color_preview = bubbleColorToSDL(stats.nextColor);
-    gridToScreenCoord(stats.y, stats.x + m_cols/2, screenX, screenY);
+    gridToScreenCoord(stats.y, stats.x + GameSettings::Cols/2, screenX, screenY);
     drawCircle(screenX, screenY, m_hexSize / std::sqrt(3), next_color_preview, true);
 
     // Draw aiming line if mouse is over game area

@@ -77,10 +77,8 @@ public:
      * Configures the hexagonal grid layout to fit the specified dimensions.
      * Should be called after init() with the board's row and column counts.
      *
-     * @param rows Number of rows in the hexagonal grid.
-     * @param cols Number of columns in the hexagonal grid.
      */
-    void colsRows(size_t rows, size_t cols);
+    void initGameSettings();
     /**
      * @brief Shuts down the renderer and releases all SDL2 resources.
      *
@@ -286,9 +284,6 @@ private:
     // ===== SDL2 Resources =====
     SDL_Window* m_window{nullptr};         ///< SDL2 window handle.
     SDL_Renderer* m_renderer{nullptr};     ///< SDL2 renderer for drawing. 
-    size_t m_rows{0};                      ///< Number of rows in the game board.
-    size_t m_cols{0};                      ///< Number of columns in the game board.
-
     // ===== Window State =====
     int m_windowWidth{0};                  ///< Window width in pixels.
     int m_windowHeight{0};                 ///< Window height in pixels.
