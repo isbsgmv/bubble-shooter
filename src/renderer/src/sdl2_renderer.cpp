@@ -260,12 +260,15 @@ void SDL2Renderer::render(const Board &board, const RenderStats &stats)
 
 
     // Draw launcher indicator
-
     SDL_Color next_color = bubbleColorToSDL(stats.projectileColor);
     int screenX, screenY;
     gridToScreenCoord(stats.y, stats.x, screenX, screenY);
-    // std::cout << "Rendering projectile at (" << stats.y << ", " << stats.x << ") at screen coordinates (" << screenX << ", " << screenY << ") with color " << static_cast<int>(stats.projectileColor) << "\n";
     drawCircle(screenX, screenY, m_hexSize / std::sqrt(3), next_color, true);
+
+    //Draw next color preview
+    SDL_Color next_color_preview = bubbleColorToSDL(stats.nextColor);
+    gridToScreenCoord(stats.y, stats.x + m_cols/2, screenX, screenY);
+    drawCircle(screenX, screenY, m_hexSize / std::sqrt(3), next_color_preview, true);
 
     // Draw aiming line if mouse is over game area
     if (m_mouseX > m_gridStartX && m_mouseX < m_gridStartX + m_gridWidth &&

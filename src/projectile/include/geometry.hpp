@@ -26,7 +26,7 @@ namespace ProjectileGeometry
 {    
     /// Collision detection radius in game coordinate units.
     /// Projectiles collide with bubbles when distance to cell center <= kCollisionRadius.
-    inline constexpr double kCollisionRadius = 1.1;
+    inline constexpr double kCollisionRadius = 0.8;
 
     /**
      * @brief Calculates the x-coordinate of a hexagonal grid cell's center.

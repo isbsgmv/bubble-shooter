@@ -25,6 +25,7 @@
 struct RenderStats {
     double x, y;                           ///< Current projectile position in game coordinates.
     Bubble::Color projectileColor;         ///< Color of the projectile.
+    Bubble::Color nextColor{Bubble::Color::None};         ///< Next Color of the projectile.
 };
 
 /**

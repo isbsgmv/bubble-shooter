@@ -6,7 +6,7 @@
 
 namespace
 {
-    constexpr double kStep = 0.1;
+    constexpr double kStep = 0.5;
     constexpr int kMaxBounces = 16;
 } // namespace
 

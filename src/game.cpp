@@ -53,11 +53,12 @@ void Game::loop(SDL2Renderer *renderer)
     std::string input;
 
     renderer->colsRows(m_board.rows(), m_board.cols());
-    // Main game loop
     double launcherX = (static_cast<double>(m_board.cols()) - 1.0) / 2.0;
     double launcherY = static_cast<double>(m_board.rows()) - 1.0;
     Bubble::Color projectileColor = m_colorManager.getColor();
-    // SDL2-based loop with dual input
+    Bubble::Color nextColor = m_colorManager.getColor();
+
+    // Main game loop
     while (renderer->isRunning() && !isGameOver() && !hasWon())
     {
         renderer->pollEvents();
@@ -65,7 +66,6 @@ void Game::loop(SDL2Renderer *renderer)
         // Check for mouse input from SDL2
         if (renderer->shouldShoot())
         {
-            std::cout << "Projectile color: " << static_cast<int>(projectileColor) << "\n";
             auto angle = renderer->getMouseAngle();
             if (angle.has_value())
             {
@@ -109,13 +109,15 @@ void Game::loop(SDL2Renderer *renderer)
             }
             renderer->resetShootFlag();
 
-            projectileColor = m_colorManager.getColor();
+            projectileColor = nextColor;
+            nextColor = m_colorManager.getColor();
         }
 
         // Render the current game state
         RenderStats stats{
             launcherX, launcherY,
-            projectileColor};
+            projectileColor,
+            nextColor};
         renderer->render(m_board, stats);
 
         // Print board to CLI as well (optional, can be disabled)
