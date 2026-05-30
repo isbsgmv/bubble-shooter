@@ -1,5 +1,4 @@
 #include "bubble_color.hpp"
-
 namespace Bubble {
 
 ColorManager::ColorManager(): m_rng(std::random_device{}())
@@ -16,10 +15,10 @@ Color ColorManager::getColor()
 {
     // Pick a random color candidate.
     Color new_color = randomColor();
-
     // Keep rolling until a color not currently tracked in m_counts is found.
-    while (m_counts.find(new_color) == m_counts.end())
-    {
+    while (m_counts.at(new_color) <= 1)
+    { 
+        m_counts.at(new_color)--;
         new_color = randomColor();
     }
 
